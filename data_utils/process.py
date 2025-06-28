@@ -6,6 +6,12 @@ import numpy as np
 def extract_audio(path, out_path, sample_rate=16000):
     
     print(f'[INFO] ===== extract audio from {path} to {out_path} =====')
+    # check if video has audio stream
+    import subprocess
+    result = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "stream=codec_type", "-of", "default=noprint_wrappers=1:nokey=1", path], capture_output=True, text=True)
+    if "audio" not in result.stdout:
+        print("[INFO] No audio stream found in the video. Skipping audio extraction.")
+        return
     cmd = f'ffmpeg -i {path} -f wav -ar {sample_rate} {out_path}'
     os.system(cmd)
     print(f'[INFO] ===== extracted audio =====')
@@ -80,6 +86,7 @@ if __name__ == "__main__":
     extract_audio(opt.path, wav_path)
     extract_images(opt.path, asr_mode)
     get_landmark(opt.path, landmarks_dir)
-    get_audio_feature(wav_path, asr_mode)
+    if os.path.exists(wav_path):
+        get_audio_feature(wav_path, asr_mode)
     
     

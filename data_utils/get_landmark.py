@@ -75,8 +75,8 @@ class Landmark:
         self.mean_face = np.asarray(mean_face.split(' '), dtype=np.float32)
         self.det_net = SCRFD('./scrfd_2.5g_kps.onnx', confThreshold=0.1, nmsThreshold=0.5)
 
-        checkpoint = torch.load('./checkpoint_epoch_335.pth.tar')
-        self.pfld_backbone = PFLDInference().cuda()
+        checkpoint = torch.load('./checkpoint_epoch_335.pth.tar', map_location=torch.device('cpu'))
+        self.pfld_backbone = PFLDInference()
         self.pfld_backbone.load_state_dict(checkpoint['pfld_backbone'])
         self.pfld_backbone.eval()
 
@@ -97,7 +97,6 @@ class Landmark:
         input = np.asarray(input, dtype=np.float32) / 255.0
         input = input.transpose(2,0,1)
         input = torch.from_numpy(input)[None]
-        input = input.cuda()
         # print(input)
         # asd
 

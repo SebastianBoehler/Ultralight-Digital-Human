@@ -8,4 +8,7 @@ checkpoint
 syncnet_checkpoint
 *.jpg
 data_utils/encoder.onnx
+data_utils/landmarks
 __MACOSX
+.env
+venv
